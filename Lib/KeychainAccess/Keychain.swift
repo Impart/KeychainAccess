@@ -591,6 +591,20 @@ public final class Keychain {
     #endif
 
     // MARK:
+    
+    @available(macOS 10.15, *)
+    public func getAsync(_ key: String, ignoringAttributeSynchronizable: Bool = true) async throws -> String? {
+        return try await withCheckedThrowingContinuation { continuation in
+            DispatchQueue.global().async {
+                do {
+                    let string = try self.get(key, ignoringAttributeSynchronizable: ignoringAttributeSynchronizable)
+                    continuation.resume(returning: string)
+                } catch {
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
+    }
 
     public func get(_ key: String, ignoringAttributeSynchronizable: Bool = true) throws -> String? {
         return try getString(key, ignoringAttributeSynchronizable: ignoringAttributeSynchronizable)
@@ -661,6 +675,20 @@ public final class Keychain {
 
     // MARK:
 
+    @available(macOS 10.15, *)
+    public func setAsync(_ value: String, key: String, ignoringAttributeSynchronizable: Bool = true) async throws {
+        return try await withCheckedThrowingContinuation { continuation in
+            DispatchQueue.global().async {
+                do {
+                    try self.set(value, key: key, ignoringAttributeSynchronizable: ignoringAttributeSynchronizable)
+                    continuation.resume()
+                } catch {
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
+    }
+    
     public func set(_ value: String, key: String, ignoringAttributeSynchronizable: Bool = true) throws {
         guard let data = value.data(using: .utf8, allowLossyConversion: false) else {
             print("failed to convert string to data")
@@ -810,6 +838,20 @@ public final class Keychain {
     }
 
     // MARK:
+    
+    @available(macOS 10.15, *)
+    public func removeAsync(_ key: String, ignoringAttributeSynchronizable: Bool = true) async throws {
+        return try await withCheckedThrowingContinuation { continuation in
+            DispatchQueue.global().async {
+                do {
+                    try self.remove(key, ignoringAttributeSynchronizable: ignoringAttributeSynchronizable)
+                    continuation.resume()
+                } catch {
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
+    }
 
     public func remove(_ key: String, ignoringAttributeSynchronizable: Bool = true) throws {
         var query = options.query(ignoringAttributeSynchronizable: ignoringAttributeSynchronizable)
@@ -1102,6 +1144,16 @@ public final class Keychain {
 
     // MARK:
 
+    @available(macOS 10.15, *)
+    fileprivate func itemsAsync() async -> [[String: Any]] {
+        return await withCheckedContinuation { continuation in
+            DispatchQueue.global().async {
+                let items = self.items()
+                continuation.resume(returning: items)
+            }
+        }
+    }
+    
     fileprivate func items() -> [[String: Any]] {
         var query = options.query()
         query[MatchLimit] = MatchLimitAll
