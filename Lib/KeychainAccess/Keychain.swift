@@ -592,7 +592,7 @@ public final class Keychain {
 
     // MARK:
     
-    @available(macOS 10.15, *)
+    @available(iOS 13.0, OSX 10.15, *)
     public func getAsync(_ key: String, ignoringAttributeSynchronizable: Bool = true) async throws -> String? {
         return try await withCheckedThrowingContinuation { continuation in
             DispatchQueue.global().async {
