@@ -675,7 +675,7 @@ public final class Keychain {
 
     // MARK:
 
-    @available(macOS 10.15, *)
+    @available(iOS 13.0, macOS 10.15, *)
     public func setAsync(_ value: String, key: String, ignoringAttributeSynchronizable: Bool = true) async throws {
         return try await withCheckedThrowingContinuation { continuation in
             DispatchQueue.global().async {
@@ -839,7 +839,7 @@ public final class Keychain {
 
     // MARK:
     
-    @available(macOS 10.15, *)
+    @available(iOS 13.0, macOS 10.15, *)
     public func removeAsync(_ key: String, ignoringAttributeSynchronizable: Bool = true) async throws {
         return try await withCheckedThrowingContinuation { continuation in
             DispatchQueue.global().async {
@@ -1144,7 +1144,7 @@ public final class Keychain {
 
     // MARK:
 
-    @available(macOS 10.15, *)
+    @available(iOS 13.0, macOS 10.15, *)
     fileprivate func itemsAsync() async -> [[String: Any]] {
         return await withCheckedContinuation { continuation in
             DispatchQueue.global().async {
